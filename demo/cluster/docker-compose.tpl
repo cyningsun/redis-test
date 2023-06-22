@@ -1,5 +1,5 @@
   redis-cluster-${PORT}: # 服务名称
-    image: redis:6.2 # 创建容器时所需的镜像
+    image: redis:6.0
     container_name: redis-cluster-${PORT} # 容器名称
     restart: always # 容器总是重新启动
     volumes: # 数据卷，目录挂载

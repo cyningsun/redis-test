@@ -21,7 +21,7 @@ SLOTS_NUM=16384  # 总的 slot 数量
 MAX_INT=2147483647
 
 # 获取 Redis Cluster 节点的信息
-cluster_info=$(redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" CLUSTER NODES)
+cluster_info=$(redis-cli -h "$REDIS_IP" -p "$REDIS_PORT" CLUSTER NODES)
 
 # 从 cluster_info 中提取 Slots 0 和 16383 的 Master 节点信息
 master_nodes=$(echo "$cluster_info" | awk '{if ($3 ~ /master/) print $0}')
@@ -52,7 +52,8 @@ slot16383_dstip=$(echo "$D" | awk '{print $2}' | awk -F: '{print $1}')
 slot16383_dstport=$(echo "$D" | awk '{print $2}' | awk -F: '{print $2}' | awk -F@ '{print $1}')
 
 
-IFS=$'\n' read -r -d '' -a slaves_nodes <<< "$(echo "$cluster_info" | awk '{if ($3 ~ /slave/) print $0}' |grep -v $slot0_dstid | grep -v $slot16383_dstid)"
+IFS=$'\n' read -r -d '' -a slaves_nodes <<< "$(echo "$cluster_info" | awk '{if ($3 ~ /slave/) print $0}' |grep -E "$slot0_srcid|$slot16383_srcid")"
+
 num_lines=${#slaves_nodes[@]}
 index=$(( RANDOM % $num_lines ))
 echo $num_lines $index
