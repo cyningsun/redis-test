@@ -1,0 +1,4 @@
+- cluster_init.sh: create cluster
+- cluster_fill.sh: load data cover all slots
+- slots_migrate.sh: migrate slot 0 & 16383, and do failover 
+- slots_print.sh: print POV of all nodes by CLUSTER NODES CLUSTER INFO
