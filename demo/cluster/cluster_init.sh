@@ -39,6 +39,17 @@ done
 # setup
 docker-compose up -d
 
+# Ping all nodes util they are up
+echo -e "\n\nPING>>>"
+for port in $REDIS_PORTS; do
+  while true; do
+    echo "redis-cli -h ${REDIS_IP} -p ${port} PING"
+    if [ "$(redis-cli -h ${REDIS_IP} -p ${port} PING)" == "PONG" ]; then
+      break
+    fi
+    sleep 1
+  done
+done
 
 # CLUSTER MEET
 echo -e "\n\nCLUSTER MEET>>>"
