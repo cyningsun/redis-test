@@ -1,2 +1,0 @@
-- redis_init.sh: create redis
-- redis_fill.sh: load data into redis
