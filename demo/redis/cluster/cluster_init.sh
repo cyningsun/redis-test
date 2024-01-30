@@ -1,5 +1,7 @@
 #! /bin/bash
 
+unset SSH_AUTH_SOCK
+
 DEFAULT_REDIS_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | head -n 1 | awk '{print $2}')
 if [ -z "${REDIS_IP}" ]; then
   export "REDIS_IP=$DEFAULT_REDIS_IP"
@@ -21,23 +23,23 @@ SLOTS_NUM=16384  # 总的 slot 数量
 MAX_INT=2147483647
 
 # cleanup
-docker-compose down
-docker-compose rm
+podman-compose down
+podman-compose rm
 rm -rf ./redis-cluster
 
 # init redis config
-echo "version: \"3\"" > ./docker-compose.yaml
-echo "services:" >> ./docker-compose.yaml
+echo "version: \"3\"" > ./podman-compose.yaml
+echo "services:" >> ./podman-compose.yaml
 for port in $REDIS_PORTS; do
   mkdir -p ./redis-cluster/redis-cluster-${port}
   IP=${REDIS_IP} PORT=${port} envsubst < ./redis-cluster.tpl > ./redis-cluster/redis-cluster-${port}/redis.conf
   mkdir -p ./redis-cluster/redis-cluster-${port}/data
 
-  PORT=${port} envsubst < ./docker-compose.tpl >> ./docker-compose.yaml
+  PORT=${port} envsubst < ./podman-compose.tpl >> ./podman-compose.yaml
 done
 
 # setup
-docker-compose up -d
+podman-compose up -d
 
 # Ping all nodes util they are up
 echo -e "\n\nPING>>>"

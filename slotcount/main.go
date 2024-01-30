@@ -18,16 +18,16 @@ func main() {
 		return
 	}
 
-	// 创建 Redis 客户端
+	// create Redis client
 	client := redis.NewClient(&redis.Options{
 		Addr: os.Args[1], // Redis 地址
 	})
 
-	// 创建上下文
+	// init context
 	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	defer cancel()
 
-	// 调用 CLUSTER SLOTS 命令
+	// get slots info from CLUSTER SLOTS
 	slots, err := client.ClusterSlots(ctx).Result()
 	if err != nil {
 		log.Fatal(err)
@@ -57,7 +57,7 @@ func main() {
 		return nodeSlots[i][0].Start < nodeSlots[j][0].Start
 	})
 
-	// calc slot count by node id
+	// calculate slot count by node id
 	fmt.Println("node_id\tnode_addr\tslot_count\tslot_range")
 	for _, slots := range nodeSlots {
 		var slotCount int
