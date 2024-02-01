@@ -114,7 +114,7 @@ for port in $KVROCKS_PORTS; do
 done
 nodes=${nodes%?}
 
-curl -sL -d '{"name":"tc","nodes":['"$nodes"'],"replica":'"$KVROCKS_REPLICAS"',"password":""}' -H "Content-Type: application/json" -X POST "http://${KVROCKS_IP}:${CONTROLLER_PORT}/api/v1/namespaces/ns/clusters"
+curl -sL -d '{"name":"tc","nodes":['"$nodes"'],"replicas":'"$KVROCKS_REPLICAS"',"password":""}' -H "Content-Type: application/json" -X POST "http://${KVROCKS_IP}:${CONTROLLER_PORT}/api/v1/namespaces/ns/clusters"
 
 # list cluster
 curl -sL -X GET "http://${KVROCKS_IP}:${CONTROLLER_PORT}/api/v1/namespaces/ns/clusters/tc" | jq 
