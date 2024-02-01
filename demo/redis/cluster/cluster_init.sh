@@ -12,7 +12,7 @@ if [ -z "${REDIS_PORT}" ]; then
   export "REDIS_PORT=$DEFAULT_REDIS_PORT"
 fi
 
-DEFAULT_REDIS_SHARDS=5
+DEFAULT_REDIS_SHARDS=3
 if [ -z "${REDIS_SHARDS}" ]; then
   export "REDIS_SHARDS=$DEFAULT_REDIS_SHARDS"
 fi
@@ -23,23 +23,23 @@ SLOTS_NUM=16384  # 总的 slot 数量
 MAX_INT=2147483647
 
 # cleanup
-podman-compose down
-podman-compose rm
+docker-compose down
+docker-compose rm
 rm -rf ./redis-cluster
 
 # init redis config
-echo "version: \"3\"" > ./podman-compose.yaml
-echo "services:" >> ./podman-compose.yaml
+echo "version: \"3\"" > ./docker-compose.yaml
+echo "services:" >> ./docker-compose.yaml
 for port in $REDIS_PORTS; do
   mkdir -p ./redis-cluster/redis-cluster-${port}
   IP=${REDIS_IP} PORT=${port} envsubst < ./redis-cluster.tpl > ./redis-cluster/redis-cluster-${port}/redis.conf
   mkdir -p ./redis-cluster/redis-cluster-${port}/data
 
-  PORT=${port} envsubst < ./podman-compose.tpl >> ./podman-compose.yaml
+  PORT=${port} envsubst < ./docker-compose.tpl >> ./docker-compose.yaml
 done
 
 # setup
-podman-compose up -d
+docker-compose up -d
 
 # Ping all nodes util they are up
 echo -e "\n\nPING>>>"

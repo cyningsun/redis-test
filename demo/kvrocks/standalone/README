@@ -1,0 +1,2 @@
+- standalone_init.sh: create redis
+- standalone_fill.sh: load data into redis

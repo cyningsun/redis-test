@@ -1,0 +1,2 @@
+- cluster_init.sh: create cluster
+- cluster_fill.sh: load data cover all slots

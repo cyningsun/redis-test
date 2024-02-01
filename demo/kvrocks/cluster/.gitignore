@@ -1,0 +1,5 @@
+kvrocks-cluster/*
+docker-compose.yaml
+restore.toml
+data/redis-shake.log
+
